@@ -8,6 +8,8 @@ let index;
 let imgIndex;
 
 
+// разметка
+
 images.map(image => {
     const galleryItem = document.createElement('li');
     galleryItem.classList.add('gallery__item');
@@ -28,43 +30,61 @@ images.map(image => {
     galleryRef.append(galleryItem);
 })
 
+// клики
+
+const openModal = event => {
+    lightBoxRef.classList.add('is-open');
+    bigImageRef.src = event.target.dataset.source;
+    bigImageRef.alt = event.target.alt;
+    imgIndex = Number(event.target.dataset.index);
+}
+
+const closeModal = () => {
+    lightBoxRef.classList.remove('is-open');
+    bigImageRef.src = '';
+    bigImageRef.alt = '';
+}
+
 galleryRef.addEventListener('click', event => {
     event.preventDefault();
     if(!event.target.classList.contains('gallery__image')) return;
-    lightBoxRef.classList.add('is-open');
-    const imgLink = event.target.dataset.source;
-    const imgAlt = event.target.alt;
-    bigImageRef.setAttribute('src', imgLink);
-    bigImageRef.setAttribute('alt', imgAlt);
-    imgIndex = event.target.dataset.index;
+    openModal(event);
 })
 
 lightBoxRef.addEventListener('click', event => {
     if(!event.target.classList.contains('lightbox__button') && !event.target.classList.contains('lightbox__overlay')) return;
-    lightBoxRef.classList.remove('is-open'); //вынести в функци
-    bigImageRef.setAttribute('src', '');
+    closeModal();
 })
 
-window.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-    lightBoxRef.classList.remove('is-open');
-    bigImageRef.setAttribute('src', '');
+
+// нажатие клавиш
+
+const escapeBtn = event => {
+    if (event.code === 'Escape') {
+        closeModal();
     }
-    // if (KeyboardEvent.key='')
-})
+}
+
+const pgUp = event => {
+    if (event.code === 'ArrowRight' && imgIndex < images.length-1) {
+        imgIndex += 1;
+    } 
+}
+
+const pgDn = event => {
+    if (event.code === 'ArrowLeft' && imgIndex > 0) {
+        imgIndex -= 1;
+    }
+}
+
+const changeImage = () => {
+    bigImageRef.src = images[imgIndex].original;
+    bigImageRef.alt = images[imgIndex].description;
+}
 
 window.addEventListener('keydown', event => {
-
-    if ( event.key === 'ArrowLeft' && imgIndex > 0) {
-        imgIndex -= 1;
-        bigImageRef.setAttribute('src', images[imgIndex].original)
-    } else if (event.key === 'ArrowRight' && imgIndex < images.length-1) {
-        imgIndex += 1;
-        bigImageRef.setAttribute('src', images[imgIndex].original)
-    } 
-   
-})
-
-
-
-// lightBoxRef.classList.contains('is-open') &&
+    escapeBtn(event);
+    pgUp(event);
+    pgDn(event);
+    changeImage();
+ })
