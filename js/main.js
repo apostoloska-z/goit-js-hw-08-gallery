@@ -58,12 +58,11 @@ window.addEventListener('keydown', event => {
     if ( event.key === 'ArrowLeft' && imgIndex > 0) {
         imgIndex -= 1;
         bigImageRef.setAttribute('src', images[imgIndex].original)
-    } else if (event.key === 'ArrowRight' && imgIndex < 10) {
+    } else if (event.key === 'ArrowRight' && imgIndex < images.length-1) {
         imgIndex += 1;
         bigImageRef.setAttribute('src', images[imgIndex].original)
     } 
-
-    
+   
 })
 
 
